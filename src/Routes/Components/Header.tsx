@@ -1,6 +1,6 @@
 import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 const Nav = styled.nav`
@@ -75,14 +75,7 @@ const Circle = styled(motion.span)`
 const Input = styled(motion.input)`
   transform-origin: right center;
   position: absolute;
-  right: 0px;
-  padding: 5px 10px;
-  padding-left: 40px;
-  z-index: -1;
-  color: white;
-  font-size: 16px;
-  background-color: transparent;
-  border: 1px solid ${(props) => props.theme.white.lighter};
+  left: -150px;
 `;
 
 const logoVariants = {
@@ -101,7 +94,6 @@ function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useRouteMatch("/");
   const tvMatch = useRouteMatch("/tv");
-  const inputAnimation = useAnimation();
   const toggleSearch = () => setSearchOpen((prev) => !prev);
   return (
     <Nav>

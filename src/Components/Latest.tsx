@@ -15,12 +15,13 @@ const Loader = styled.div`
 const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
   height: 200px;
-  width: 200px;
+  width: 300px;
   background-image: url(${(props) => props.bgPhoto});
   font-size: 66px;
   background-size: cover;
   background-position: center center;
   cursor: pointer;
+  transform-origin: center left;
 `;
 
 const Info = styled(motion.div)`
@@ -67,7 +68,6 @@ function Latest() {
     ["movie", "Latest"],
     getLatestMovie
   );
-  console.log(data);
 
   return (
     <>
@@ -79,7 +79,7 @@ function Latest() {
           <Box
             layoutId={data?.id + ""}
             key={data?.id}
-            bgPhoto={makeImagePath(data?.poster_path || "")}
+            bgPhoto={makeImagePath(data?.backdrop_path || "", "w500")}
             variants={boxVariants}
             whileHover="hover"
             initial="normal"

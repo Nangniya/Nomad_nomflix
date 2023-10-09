@@ -1,6 +1,11 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { motion, AnimatePresence, useScroll } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValue,
+} from "framer-motion";
 import { IGetMoviesResult, getMovies } from "../api";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
@@ -40,6 +45,8 @@ const Overview = styled.p`
 `;
 
 const Slider = styled.div`
+  display: flex;
+  justify-content: space-between;
   position: relative;
   top: -100px;
 `;
@@ -124,6 +131,20 @@ const BigOverView = styled.p`
   top: -80px;
 `;
 
+const Chevron = styled.svg`
+  width: 50px;
+  height: 200px;
+  z-index: 99;
+  opacity: 0;
+  path {
+    fill: white;
+    stroke: white;
+  }
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 const rowVariants = {
   hidden: {
     x: window.outerWidth + 5,
@@ -183,6 +204,15 @@ function Home() {
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
+  const decreaseIndex = () => {
+    if (data) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = data.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+    }
+  };
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
@@ -201,14 +231,22 @@ function Home() {
         <Loader>...Loading</Loader>
       ) : (
         <>
-          <Banner
-            onClick={increaseIndex}
-            bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}
-          >
+          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
           <Slider>
+            <Chevron
+              onClick={decreaseIndex}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+              style={{
+                background:
+                  "linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent)",
+              }}
+            >
+              <motion.path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
+            </Chevron>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
@@ -239,6 +277,17 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
+            <Chevron
+              onClick={increaseIndex}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+              style={{
+                background:
+                  "linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent)",
+              }}
+            >
+              <motion.path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+            </Chevron>
           </Slider>
           <AnimatePresence>
             {bigMovieMatch ? (

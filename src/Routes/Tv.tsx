@@ -191,6 +191,7 @@ function Tv() {
   const [index, setIndex] = useState(0);
   const [right, setRight] = useState(true);
   const rowVariants = getRowVariants(right);
+  const { scrollY } = useScroll();
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -216,7 +217,7 @@ function Tv() {
   const onBoxClicked = (movieId: number) => {
     history.push(`/tv/${movieId}`);
   };
-  const onOverlayClick = () => history.push("/");
+  const onOverlayClick = () => history.push("/tv");
   const clickedMovie =
     bigMovieMatch?.params.tvId &&
     data?.results.find(
@@ -286,6 +287,36 @@ function Tv() {
               <motion.path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
             </Chevron>
           </Slider>
+          <AnimatePresence>
+            {bigMovieMatch ? (
+              <>
+                <Overlay
+                  onClick={onOverlayClick}
+                  exit={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                />
+                <BigMovie
+                  layoutId={bigMovieMatch.params.tvId}
+                  style={{ top: scrollY.get() + 100 }}
+                >
+                  {clickedMovie && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedMovie.name}</BigTitle>
+                      <BigOverView>{clickedMovie.overview}</BigOverView>
+                    </>
+                  )}
+                </BigMovie>
+              </>
+            ) : null}
+          </AnimatePresence>
         </>
       )}
     </Wrapper>

@@ -1,12 +1,18 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
-import { IGetMoviesResult, getMovies, getTopRatedMovies } from "../api";
+import {
+  IGetMoviesResult,
+  getMovies,
+  getTopRatedMovies,
+  getUpComingMovies,
+} from "../api";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import Latest from "../Components/Latest";
 import TopRated from "../Components/TopRated";
+import UpComing from "../Components/UpComing";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -193,7 +199,11 @@ function Home() {
   );
   const { data: topRatedData, isLoading: isTopRatedLoading } =
     useQuery<IGetMoviesResult>(["movies", "Latest"], getTopRatedMovies);
-  const totalData = (data?.results || []).concat(topRatedData?.results || []);
+  const { data: upComingData, isLoading: isUpComingLoading } =
+    useQuery<IGetMoviesResult>(["movies", "UpComing"], getUpComingMovies);
+  const totalData = (data?.results || [])
+    .concat(topRatedData?.results || [])
+    .concat(upComingData?.results || []);
   console.log("totalData: ", totalData);
   const [index, setIndex] = useState(0);
   const [right, setRight] = useState(true);
@@ -295,6 +305,7 @@ function Home() {
           </Slider>
           <Latest />
           <TopRated />
+          <UpComing />
           <AnimatePresence>
             {bigMovieMatch ? (
               <>

@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useState } from "react";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { IGetMoviesResult, getTopRatedMovies } from "../api";
+import { IGetMoviesResult, getUpComingMovies } from "../api";
 import { makeImagePath } from "../utils";
 
 const Loader = styled.div`
@@ -71,18 +71,6 @@ const Chevron = styled.svg`
   }
 `;
 
-const getRowVariants = (right: boolean) => ({
-  hidden: {
-    x: right ? window.outerWidth + 5 : -window.outerWidth - 5,
-  },
-  visible: {
-    x: 0,
-  },
-  exit: {
-    x: right ? -window.outerWidth - 5 : window.outerWidth + 5,
-  },
-});
-
 const boxVariants = {
   normal: {
     scale: 1,
@@ -108,12 +96,24 @@ const infoVariants = {
     },
   },
 };
+
+const getRowVariants = (right: boolean) => ({
+  hidden: {
+    x: right ? window.outerWidth + 5 : -window.outerWidth - 5,
+  },
+  visible: {
+    x: 0,
+  },
+  exit: {
+    x: right ? -window.outerWidth - 5 : window.outerWidth + 5,
+  },
+});
 const offset = 6;
 
-function TopRated() {
+function UpComing() {
   const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "Latest"],
-    getTopRatedMovies
+    ["movies", "UpComing"],
+    getUpComingMovies
   );
   const history = useHistory();
   const [index, setIndex] = useState(0);
@@ -150,7 +150,7 @@ function TopRated() {
         <Loader>...Loading</Loader>
       ) : (
         <>
-          <p>평점이 높은 작품</p>
+          <p>상영 예정 작품</p>
           <Slider>
             <Chevron
               onClick={decreaseIndex}
@@ -209,4 +209,4 @@ function TopRated() {
     </>
   );
 }
-export default TopRated;
+export default UpComing;

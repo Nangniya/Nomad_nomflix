@@ -50,3 +50,23 @@ export function getUpComingMovies() {
     (response) => response.json()
   );
 }
+
+interface ITV {
+  id: number;
+  backdrop_path: string;
+  poster_path: string;
+  name: string;
+  overview: string;
+}
+
+export interface IGetTvsResult {
+  page: number;
+  results: ITV[];
+}
+
+export function getTvs() {
+  return fetch(`
+  ${BASE_PATH}/tv/airing_today?api_key=${API_KEY}`).then((response) =>
+    response.json()
+  );
+}

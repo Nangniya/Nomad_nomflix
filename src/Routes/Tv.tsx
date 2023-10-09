@@ -184,6 +184,15 @@ const infoVariants = {
 
 const offset = 6;
 
+const BigRuntime = styled.span`
+  background-color: black;
+  border-radius: 15px;
+  padding: 10px 20px;
+  color: ${(props) => props.theme.white.lighter};
+  position: relative;
+  top: -80px;
+`;
+
 function Tv() {
   const { data, isLoading } = useQuery<IGetTvsResult>(
     ["tvs", "airingToday"],
@@ -224,6 +233,7 @@ function Tv() {
   };
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
+
   const onBoxClicked = (tvId: number) => {
     history.push(`/tv/${tvId}`);
   };
@@ -231,6 +241,7 @@ function Tv() {
   const clickedMovie =
     bigMovieMatch?.params.tvId &&
     totalData.find((movie) => String(movie.id) === bigMovieMatch.params.tvId);
+
   return (
     <Wrapper>
       {isLoading ? (

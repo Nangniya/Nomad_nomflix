@@ -1,17 +1,16 @@
 import { useQuery } from "react-query";
-import styled from "styled-components";
-import { motion, AnimatePresence, useScroll } from "framer-motion";
-import { IGetTvsResult, getPopularTvs, getTopRatedTvs, getTvs } from "../api";
-import { makeImagePath } from "../utils";
+import { styled } from "styled-components";
 import { useState } from "react";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import TopRatedTv from "../Components/TopRatedTv";
-import PopularTv from "../Components/PopularTv";
-import LatestTv from "../Components/LatestTv";
-
-const Wrapper = styled.div`
-  background-color: black;
-`;
+import {
+  IGetMoviesResult,
+  IGetTvsResult,
+  getPopularTvs,
+  getTopRatedMovies,
+  getTopRatedTvs,
+} from "../api";
+import { makeImagePath } from "../utils";
 
 const Loader = styled.div`
   height: 20vh;
@@ -21,32 +20,10 @@ const Loader = styled.div`
   align-items: center;
 `;
 
-const Banner = styled.div<{ bgPhoto: string }>`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-    url(${(props) => props.bgPhoto});
-  background-size: cover;
-`;
-
-const Title = styled.h2`
-  font-size: 68px;
-  margin-bottom: 20px;
-`;
-
-const Overview = styled.p`
-  font-size: 36px;
-  width: 50%;
-`;
-
 const Slider = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
-  top: -100px;
 `;
 
 const Row = styled(motion.div)`
@@ -85,55 +62,11 @@ const Info = styled(motion.div)`
     font-size: 18px;
   }
 `;
-
-const Overlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-`;
-
-const BigMovie = styled(motion.div)`
-  position: absolute;
-  width: 40vw;
-  height: 80vh;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  border-radius: 15px;
-  overflow: hidden;
-  background-color: ${(props) => props.theme.black.lighter};
-`;
-
-const BigCover = styled.div`
-  background-size: cover;
-  background-position: center center;
-  width: 100%;
-  height: 400px;
-`;
-
-const BigTitle = styled.h3`
-  color: ${(props) => props.theme.white.lighter};
-  padding: 10px;
-  font-size: 46px;
-  position: relative;
-  top: -80px;
-`;
-
-const BigOverView = styled.p`
-  padding: 20px;
-  color: ${(props) => props.theme.white.lighter};
-  position: relative;
-  top: -80px;
-`;
-
 const Chevron = styled.svg`
   padding: 10px;
   width: 50px;
   height: 200px;
-  z-index: 99;
+  z-index: 2;
   opacity: 0;
   path {
     fill: white;
@@ -181,27 +114,17 @@ const infoVariants = {
     },
   },
 };
-
 const offset = 6;
 
-function Tv() {
+function PopularTv() {
   const { data, isLoading } = useQuery<IGetTvsResult>(
-    ["tvs", "airingToday"],
-    getTvs
+    ["tvs", "Popular"],
+    getPopularTvs
   );
-  const { data: popularData, isLoading: isPopularLoading } =
-    useQuery<IGetTvsResult>(["tvs", "Popular"], getPopularTvs);
-  const { data: topRatedData, isLoading: isTopRatedLoading } =
-    useQuery<IGetTvsResult>(["tvs", "TopRated"], getTopRatedTvs);
-  const totalData = (data?.results || [])
-    .concat(topRatedData?.results || [])
-    .concat(popularData?.results || []);
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
   const [index, setIndex] = useState(0);
   const [right, setRight] = useState(true);
   const rowVariants = getRowVariants(right);
-  const { scrollY } = useScroll();
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -227,20 +150,13 @@ function Tv() {
   const onBoxClicked = (tvId: number) => {
     history.push(`/tv/${tvId}`);
   };
-  const onOverlayClick = () => history.push("/tv");
-  const clickedMovie =
-    bigMovieMatch?.params.tvId &&
-    totalData.find((movie) => String(movie.id) === bigMovieMatch.params.tvId);
   return (
-    <Wrapper>
+    <>
       {isLoading ? (
         <Loader>...Loading</Loader>
       ) : (
         <>
-          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-            <Title>{data?.results[0].name}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
-          </Banner>
+          <p>인기있는 작품</p>
           <Slider>
             <Chevron
               onClick={decreaseIndex}
@@ -263,7 +179,6 @@ function Tv() {
                 key={index}
               >
                 {data?.results
-                  .slice(1)
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
@@ -295,43 +210,9 @@ function Tv() {
               <motion.path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
             </Chevron>
           </Slider>
-          <LatestTv />
-          <TopRatedTv />
-          <PopularTv />
-          <AnimatePresence>
-            {bigMovieMatch ? (
-              <>
-                <Overlay
-                  onClick={onOverlayClick}
-                  exit={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                />
-                <BigMovie
-                  layoutId={bigMovieMatch.params.tvId}
-                  style={{ top: scrollY.get() + 100 }}
-                >
-                  {clickedMovie && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedMovie.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedMovie.name}</BigTitle>
-                      <BigOverView>{clickedMovie.overview}</BigOverView>
-                    </>
-                  )}
-                </BigMovie>
-              </>
-            ) : null}
-          </AnimatePresence>
         </>
       )}
-    </Wrapper>
+    </>
   );
 }
-
-export default Tv;
+export default PopularTv;

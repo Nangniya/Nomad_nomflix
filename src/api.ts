@@ -33,6 +33,14 @@ export interface IGetLatestMovieResult {
   title: string;
   overview: string;
 }
+
+export interface IGetLatestTvResult {
+  id: number;
+  backdrop_path: string;
+  poster_path: string;
+  name: string;
+  overview: string;
+}
 export function getLatestMovie() {
   return fetch(`
   ${BASE_PATH}/movie/latest?api_key=${API_KEY}`).then((response) =>
@@ -67,6 +75,25 @@ export interface IGetTvsResult {
 export function getTvs() {
   return fetch(`
   ${BASE_PATH}/tv/airing_today?api_key=${API_KEY}`).then((response) =>
+    response.json()
+  );
+}
+
+export function getTopRatedTvs() {
+  return fetch(`${BASE_PATH}/tv/top_rated?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+}
+
+export function getPopularTvs() {
+  return fetch(`${BASE_PATH}/tv/popular?api_key=${API_KEY}`).then((response) =>
+    response.json()
+  );
+}
+
+export function getLatestTv() {
+  return fetch(`
+  ${BASE_PATH}/tv/latest?api_key=${API_KEY}`).then((response) =>
     response.json()
   );
 }

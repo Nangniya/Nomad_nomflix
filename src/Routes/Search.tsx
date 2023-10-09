@@ -2,19 +2,9 @@ import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  GetSearch,
-  IGetMovieDetail,
-  IGetMoviesResult,
-  IGetSearchResult,
-  getMovieDetail,
-  getMovies,
-  getTopRatedMovies,
-  getUpComingMovies,
-} from "../api";
+import { GetSearch, IGetSearchResult } from "../api";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
 
 const Slider = styled.div`
   display: flex;

@@ -1,15 +1,11 @@
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValue,
-} from "framer-motion";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { IGetMoviesResult, getMovies } from "../api";
 import { makeImagePath } from "../utils";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import Latest from "../Components/Latest";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -132,6 +128,7 @@ const BigOverView = styled.p`
 `;
 
 const Chevron = styled.svg`
+  padding: 10px;
   width: 50px;
   height: 200px;
   z-index: 99;
@@ -145,17 +142,17 @@ const Chevron = styled.svg`
   }
 `;
 
-const rowVariants = {
+const getRowVariants = (right: boolean) => ({
   hidden: {
-    x: window.outerWidth + 5,
+    x: right ? window.outerWidth + 5 : -window.outerWidth - 5,
   },
   visible: {
     x: 0,
   },
   exit: {
-    x: -window.outerWidth - 5,
+    x: right ? -window.outerWidth - 5 : window.outerWidth + 5,
   },
-};
+});
 
 const boxVariants = {
   normal: {
@@ -195,10 +192,13 @@ function Home() {
   );
 
   const [index, setIndex] = useState(0);
+  const [right, setRight] = useState(true);
+  const rowVariants = getRowVariants(right);
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
       toggleLeaving();
+      setRight(true);
       const totalMovies = data.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
@@ -208,6 +208,7 @@ function Home() {
     if (data) {
       if (leaving) return;
       toggleLeaving();
+      setRight(false);
       const totalMovies = data.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
@@ -289,6 +290,7 @@ function Home() {
               <motion.path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
             </Chevron>
           </Slider>
+          <Latest />
           <AnimatePresence>
             {bigMovieMatch ? (
               <>

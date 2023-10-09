@@ -25,3 +25,17 @@ export function getMovies() {
     (response) => response.json()
   );
 }
+
+export interface IGetLatestMovieResult {
+  id: number;
+  backdrop_path: string;
+  poster_path: string;
+  title: string;
+  overview: string;
+}
+export function getLatestMovie() {
+  return fetch(`
+  ${BASE_PATH}/movie/latest?api_key=${API_KEY}`).then((response) =>
+    response.json()
+  );
+}

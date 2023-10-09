@@ -111,7 +111,7 @@ const BigCover = styled.div`
   background-size: cover;
   background-position: center center;
   width: 100%;
-  height: 400px;
+  height: 300px;
 `;
 
 const BigTitle = styled.h3`

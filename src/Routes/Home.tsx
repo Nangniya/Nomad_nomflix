@@ -2,7 +2,9 @@ import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import {
+  IGetMovieDetail,
   IGetMoviesResult,
+  getMovieDetail,
   getMovies,
   getTopRatedMovies,
   getUpComingMovies,
@@ -116,7 +118,7 @@ const BigCover = styled.div`
   background-size: cover;
   background-position: center center;
   width: 100%;
-  height: 400px;
+  height: 300px;
 `;
 
 const BigTitle = styled.h3`
@@ -129,6 +131,15 @@ const BigTitle = styled.h3`
 
 const BigOverView = styled.p`
   padding: 20px;
+  color: ${(props) => props.theme.white.lighter};
+  position: relative;
+  top: -80px;
+`;
+
+const BigRuntime = styled.span`
+  background-color: black;
+  border-radius: 15px;
+  padding: 10px 20px;
   color: ${(props) => props.theme.white.lighter};
   position: relative;
   top: -80px;
@@ -204,7 +215,11 @@ function Home() {
   const totalData = (data?.results || [])
     .concat(topRatedData?.results || [])
     .concat(upComingData?.results || []);
-  console.log("totalData: ", totalData);
+  const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
+  const { data: detailData, isLoading: isDetailLoading } =
+    useQuery<IGetMovieDetail>(["movie", "detail", selectedMovieId], () =>
+      getMovieDetail(selectedMovieId as number)
+    );
   const [index, setIndex] = useState(0);
   const [right, setRight] = useState(true);
   const rowVariants = getRowVariants(right);
@@ -231,6 +246,7 @@ function Home() {
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
+    setSelectedMovieId(movieId);
     history.push(`/movies/${movieId}`);
   };
   const onOverlayClick = () => history.push("/");
@@ -329,7 +345,15 @@ function Home() {
                         }}
                       />
                       <BigTitle>{clickedMovie.title}</BigTitle>
-                      <BigOverView>{clickedMovie.overview}</BigOverView>
+                      <BigOverView>
+                        {clickedMovie.overview.slice(0, 300)}...
+                      </BigOverView>
+                      <BigRuntime>
+                        상영시간 : {detailData?.runtime} 분
+                      </BigRuntime>
+                      {detailData?.genres.map((genre) => (
+                        <BigRuntime>{genre.name}</BigRuntime>
+                      ))}
                     </>
                   )}
                 </BigMovie>

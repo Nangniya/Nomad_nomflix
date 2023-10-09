@@ -97,3 +97,18 @@ export function getLatestTv() {
     response.json()
   );
 }
+
+export function getMovieDetail(movieId: number) {
+  return fetch(`
+  ${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}`).then((response) =>
+    response.json()
+  );
+}
+
+export interface IGetMovieDetail {
+  release_date: string;
+  runtime: number;
+  genres: {
+    name: string;
+  }[];
+}

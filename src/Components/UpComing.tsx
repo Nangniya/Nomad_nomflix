@@ -18,6 +18,8 @@ const Slider = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
+  width: 90%;
+  margin: auto;
 `;
 
 const Row = styled(motion.div)`
@@ -150,7 +152,7 @@ function UpComing() {
         <Loader>...Loading</Loader>
       ) : (
         <>
-          <p>상영 예정 작품</p>
+          <p style={{ marginLeft: "80px" }}>상영 예정 작품</p>
           <Slider>
             <Chevron
               onClick={decreaseIndex}
@@ -176,7 +178,7 @@ function UpComing() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
-                      layoutId={movie.id + ""}
+                      layoutId={movie.id + "upcoming"}
                       key={movie.id}
                       bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                       variants={boxVariants}

@@ -18,6 +18,8 @@ const Slider = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
+  width: 90%;
+  margin: auto;
 `;
 
 const Row = styled(motion.div)`
@@ -150,7 +152,7 @@ function TopRated() {
         <Loader>...Loading</Loader>
       ) : (
         <>
-          <p>평점이 높은 작품</p>
+          <p style={{ marginLeft: "80px" }}>평점이 높은 작품</p>
           <Slider>
             <Chevron
               onClick={decreaseIndex}
@@ -176,7 +178,7 @@ function TopRated() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
-                      layoutId={movie.id + ""}
+                      layoutId={movie.id + "latest"}
                       key={movie.id}
                       bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                       variants={boxVariants}

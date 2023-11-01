@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import TopRatedTv from "../Components/TopRatedTv";
 import PopularTv from "../Components/PopularTv";
-import LatestTv from "../Components/LatestTv";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -46,7 +45,9 @@ const Slider = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
+  width: 90%;
   top: -100px;
+  margin: auto;
 `;
 
 const Row = styled(motion.div)`
@@ -306,7 +307,6 @@ function Tv() {
               <motion.path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
             </Chevron>
           </Slider>
-          <LatestTv />
           <TopRatedTv />
           <PopularTv />
           <AnimatePresence>

@@ -12,7 +12,6 @@ import {
 import { makeImagePath } from "../utils";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import Latest from "../Components/Latest";
 import TopRated from "../Components/TopRated";
 import UpComing from "../Components/UpComing";
 
@@ -54,6 +53,8 @@ const Slider = styled.div`
   justify-content: space-between;
   position: relative;
   top: -100px;
+  width: 90%;
+  margin: auto;
 `;
 
 const Row = styled(motion.div)`
@@ -319,7 +320,6 @@ function Home() {
               <motion.path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
             </Chevron>
           </Slider>
-          <Latest />
           <TopRated />
           <UpComing />
           <AnimatePresence>

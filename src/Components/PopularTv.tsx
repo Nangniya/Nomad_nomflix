@@ -24,6 +24,8 @@ const Slider = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
+  width: 90%;
+  margin: auto;
 `;
 
 const Row = styled(motion.div)`
@@ -156,7 +158,7 @@ function PopularTv() {
         <Loader>...Loading</Loader>
       ) : (
         <>
-          <p>인기있는 작품</p>
+          <p style={{ marginLeft: "80px" }}>인기있는 작품</p>
           <Slider>
             <Chevron
               onClick={decreaseIndex}
@@ -182,7 +184,7 @@ function PopularTv() {
                   .slice(offset * index, offset * index + offset)
                   .map((movie) => (
                     <Box
-                      layoutId={movie.id + ""}
+                      layoutId={movie.id + "populartv"}
                       key={movie.id}
                       bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                       variants={boxVariants}

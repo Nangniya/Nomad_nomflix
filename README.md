@@ -2,4 +2,4 @@
 
 https://nangniya.github.io/Nomad_nomflix/
 
-[!image]
+![image](https://i.ibb.co/N2gdcQD/image.jpg))
